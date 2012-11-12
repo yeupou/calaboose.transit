@@ -69,4 +69,8 @@ name;
 Then you must create a group named transit and add to it users that are entitled
 to use this.
 
-You must also make sure nginx (www-data?) can write to the directory where you store the .passwd file. 
+You must also make sure nginx (www-data?) can write to the directory where you store the .passwd file. In the default case here, it's /etc/nginx/passwd/
+
+Finally, you must copy/link the provided crontab so passwd are only temporary.
+ 
+
