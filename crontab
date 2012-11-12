@@ -1,1 +1,1 @@
-*/10 * * * *	www-data find /etc/nginx/passwd/transit -mmin +60 -print0 | xargs -0 --no-run-if-empty rm
+*/10 * * * *	www-data if [ "`find /etc/nginx/passwd/transit -mmin +60 -print0`" ]; then echo > /etc/nginx/passwd/transit ; fi
