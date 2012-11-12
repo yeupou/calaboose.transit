@@ -62,7 +62,9 @@ if ($user) {
 		    # If we get here, we create a new password and send it by
 		    # mail to the user.
 		    # (assume there is at least a valid alias for the user)
-		    my $random = map { ("a..z","A..Z","0..9")[rand 52] } 0..5;
+
+		    my @chars = (0 .. 9, 'a' .. 'z', 'A' .. 'Z');
+		    my $random =  print join "", @chars[ map rand @chars, 0 .. 6 ];
 		    my $remote_ip = $ENV{'REMOTE_ADDR'};
 
                     # this must be logged
@@ -71,7 +73,7 @@ if ($user) {
 		    close(LOG);
 		    
 		    open(PASSWD, "> $passwd");
-		    print PASSWD "$user:$random\n";
+		    print PASSWD "$user:".crypt($random, $user)."\n";
 		    close(PASSWD);
 			
 
