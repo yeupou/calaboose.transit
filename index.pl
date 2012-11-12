@@ -31,6 +31,8 @@ print start_html(-lang =>  'fr-FR',
 
 
 # otherwise print a form to allow user to register 
+print h3("Utilisateur non identifié");
+print p("Indiquer ici le nom d'utilisateur utilisé habituellement :");
 print start_form(-method=>"POST").textfield(-name=>'url', -default=>'http://').end_form();
 
 
