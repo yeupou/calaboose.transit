@@ -31,7 +31,7 @@ EndOfHTML
 
     print $ENV{"REMOTE_USER"}." BLALBLA <br>";
 
-    foreach $key (sort(keys %ENV)) {
+    foreach my $key (sort(keys %ENV)) {
 	print "$key = $ENV{$key}<br>\n";
 }
 
