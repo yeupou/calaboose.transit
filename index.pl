@@ -32,11 +32,13 @@ my $user = param('user');
 if ($user) {
 # a user was provided
     print h3("Demande d'authentification :");
+    
+    print "DBG user $user\n";
 
     # only take into account the request if it relates to a valid user...
     if (scalar(getpwnam($user)) eq "") {
 
-	print "DBG Valid user\n";
+	print "DBG $user is valid\n";
 
 	# and is the user belongs to the group transit
 	use User::grent;
@@ -44,7 +46,7 @@ if ($user) {
 	for (@{$group->members}) {
 	    if ($_ eq $user) {
 
-		print "DBG Valid user belongs to transit\n";
+		print "DBG $user belongs to transit\n";
 		
 		# then set up a password if there's no .passwd, 
 		#   (concurrent access is not implemented, otherwise it should
@@ -53,7 +55,7 @@ if ($user) {
 		my $passwd = "../.passwd";
 		unless (-e $passwd) {
 		    
-		    print "DBG Valid user belongs to transit and $passwd is missing\n";
+		    print "DBG $user belongs to transit and $passwd is missing\n";
 
 		    print "TADA";
 		    
