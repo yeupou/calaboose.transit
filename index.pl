@@ -33,7 +33,7 @@ print start_html(-lang =>  'fr-FR',
 # otherwise print a form to allow user to register 
 print h3("Inconnu...");
 print p("Indiquer ici le nom d'utilisateur habituel :");
-print start_form(-method=>"POST").textfield(-name=>'user').submit().end_form();
+print start_form(-method=>"POST",-action=>"index.pl").textfield(-name=>'user').submit().end_form();
 
 
 
