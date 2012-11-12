@@ -8,6 +8,8 @@ Yes, packet sniffing may enable some weirdo to be nasty. GPG signing is not an o
 
 The provided password will be valid for only 60 minutes. Obviously no other mail will be sent during this hour, to avoid to being spam.
 
+It will at first only support one user at a time. If need be, I'll improve it to support multiple concurrent logins.
+
 
 CONTAINS
 ========
@@ -44,13 +46,12 @@ Inside your nginx setup, something like:
 	auth_basic_user_file /var/www/.passwd;
 
 	# if it failed, go to the specific perl script that mail a password
-	error_page 401 /.getaccess/;
-	location /.getaccess/ {
+	error_page 401 /.transit/;
+	location /.transit/ {
 	         autoindex off;
                  index index.pl;
 	         auth_basic off;
         }
-
 
 	location = /.getaccess/index.pl {
                  auth_basic off;
@@ -62,3 +63,8 @@ name;
                  include fastcgi_params;
 
         }
+
+
+
+Then you must create a group named transit and add to it users that are entitled
+to use this.

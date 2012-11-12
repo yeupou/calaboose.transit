@@ -26,17 +26,46 @@ print start_html(-lang =>  'fr-FR',
 		 -encoding => 'UTF-8',
 		 -title => "Accès temporaire");
 
-# handle a posted form, if a user was provided
-#if
+my $user = param('user');
 
+if ($user) {
+# a user was provided
+    print h3("Demande d'authentification :");
 
+    # only take into account the request if it relates to a valid user...
+    if (scalar(getpwnam($user)) eq "") {
+
+	# and is the user belongs to the group transit
+	use User::grent;
+	my $group = getgrnam("transit");
+	for (@{$group->members}) {
+	    if ($_ eq $user) {
+		
+		# then set up a password if there's no .passwd, 
+		#   (concurrent access is not implemented, otherwise it should
+		# at this point read the content of .passwd and update it
+		# if need be)
+		my $passwd = "../.passwd";
+		unless (-e $passwd) {
+		    
+		    print "TADA";
+		    
+		}		
+	    }
+	}
+    }
+
+   # in any case
+   # do not provide any relevant error message, it's not supposed to give out 
+   # any details of the current system
+     
+} else {
 # otherwise print a form to allow user to register 
-print h3("Inconnu...");
-print p("Indiquer ici le nom d'utilisateur habituel :");
-print start_form(-method=>"POST",-action=>"index.pl").textfield(-name=>'user').submit().end_form();
-
-
-
+    print h3("Inconnu...");
+    print p("Indiquer ici le nom d'utilisateur habituel :");
+    print start_form(-method=>"POST",-action=>script_name()).textfield(-name=>'user').submit().end_form();
+    
+}
 
 print end_html();
 
