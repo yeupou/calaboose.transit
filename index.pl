@@ -27,13 +27,14 @@ print start_html(-lang =>  'fr-FR',
 		 -title => "Accès temporaire");
 
 # handle a posted form, if a user was provided
-
+if
 
 
 # otherwise print a form to allow user to register 
 print h3("Utilisateur non identifié");
-print p("Indiquer ici le nom d'utilisateur utilisé habituellement :");
-print start_form(-method=>"POST").textfield(-name=>'url', -default=>'http://').end_form();
+print p("Indiquer ici le nom d'utilisateur habituel :");
+print start_form(-method=>"POST").textfield(-name=>'user').submit().end_form();
+
 
 
 
