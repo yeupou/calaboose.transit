@@ -28,7 +28,7 @@ print start_html(-lang =>  'fr-FR',
 		 -encoding => 'UTF-8',
 		 -title => "Accès temporaire");
 
-my $debug = 1;
+my $debug = 0;
 my $log = "/var/log/nginx/transit.log";
 my $passwd = "/etc/nginx/passwd/transit";
 my $user = param('user');
