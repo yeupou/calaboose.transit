@@ -21,6 +21,7 @@
 use strict;
 use CGI qw(:standard Link);
 
+print header();
 print start_html(-lang =>  'fr-FR',
 		 -encoding => 'UTF-8',
 		 -title => "Accès temporaire");
@@ -33,7 +34,6 @@ foreach my $key (sort(keys %ENV)) {
 
 
 print end_html();
-
 
 
 
