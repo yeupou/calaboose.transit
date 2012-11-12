@@ -19,23 +19,20 @@
 #    USA
 
 use strict;
+use CGI qw(:standard Link);
 
-print "Content-type:text/html\n\n";
-print <<EndOfHTML;
+print start_html(-lang =>  'fr-FR',
+		 -encoding => 'UTF-8',
+		 -title => "Accès temporaire");
 
+print $ENV{"REMOTE_USER"}." BLALBLA <br>";
 
-<html><head><title>Accès temporaire :</title></head>
-<body>
-<h1>Perl Environment Variables</h1>
-EndOfHTML
-
-    print $ENV{"REMOTE_USER"}." BLALBLA <br>";
-
-    foreach my $key (sort(keys %ENV)) {
-	print "$key = $ENV{$key}<br>\n";
+foreach my $key (sort(keys %ENV)) {
+    print "$key = $ENV{$key}<br>\n";
 }
 
-print "</body></html>";
+
+print end_html();
 
 
 
