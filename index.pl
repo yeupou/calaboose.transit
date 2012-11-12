@@ -33,12 +33,12 @@ if ($user) {
 # a user was provided
     print h3("Demande d'authentification :");
     
-    print "DBG user $user\n";
+    print "+DBG user set to $user\n";
 
     # only take into account the request if it relates to a valid user...
     if (scalar(getpwnam($user)) ne "") {
 
-	print "DBG $user is valid\n";
+	print "+DBG $user is valid ";
 
 	# and is the user belongs to the group transit
 	use User::grent;
@@ -46,7 +46,7 @@ if ($user) {
 	for (@{$group->members}) {
 	    if ($_ eq $user) {
 
-		print "DBG $user belongs to transit\n";
+		print "+DBG $user belongs to transit ";
 		
 		# then set up a password if there's no .passwd, 
 		#   (concurrent access is not implemented, otherwise it should
@@ -55,10 +55,25 @@ if ($user) {
 		my $passwd = "../.passwd";
 		unless (-e $passwd) {
 		    
-		    print "DBG $user belongs to transit and $passwd is missing\n";
+		    print "+DBG $passwd is missing ";
 
-		    print "TADA";
+                    # this must be logged
+		    open(LOG, ">> /var/log/nginx/transit.log");
 		    
+	    
+		    # If we get here, we create a new password and send it by
+		    # mail to the user.
+		    # (assume there is at least a valid alias for the user)
+		    my $random = map { (a..z,A..Z,0..9)[rand 52] } 0..5;
+		    my $remote_ip =  $ENV{'REMOTE_ADDR');
+
+		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV['HTTP_USER_AGENT'}."\n", localtime;
+
+			
+			
+
+		    close(LOG);
+
 		}		
 	    }
 	}
