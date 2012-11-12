@@ -81,7 +81,8 @@ if ($user) {
 			
 		    # build a mail and send it
 		    use Socket;
-		    my $remote = gethostbyaddr(inet_aton($remote_ip), AF_INET) 
+		    my $remote;
+		    $remote = gethostbyaddr(inet_aton($remote_ip), AF_INET) 
 			or $remote = $remote_ip;
 		    use Mail::Send;
 		    my $msg = new Mail::Send;
