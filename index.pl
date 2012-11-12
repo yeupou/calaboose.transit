@@ -20,8 +20,6 @@
 
 use strict;
 use CGI qw(:standard Link);
-use POSIX qw(strftime);
-use Mail::Send;
 
 print header();
 print start_html(-lang =>  'fr-FR',
@@ -69,6 +67,7 @@ if ($user) {
 		    my $remote_ip = $ENV{'REMOTE_ADDR'};
 
                     # this must be logged
+		    use POSIX qw(strftime);
 		    open(LOG, ">> /var/log/nginx/transit.log");
 		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
 		    close(LOG);
@@ -81,12 +80,16 @@ if ($user) {
 		    print "+DBG $passwd updated/created ($user:$random) " if $debug;
 			
 		    # build a mail and send it
+		    use Socket;
+		    my $remote = gethostbyaddr(inet_aton($remote_ip), AF_INET) 
+			or $remote = $remote_ip;
+		    use Mail::Send;
 		    my $msg = new Mail::Send;
 		    $msg->to($user);
 		    $msg->subject("Accès temporaire");
 		    $msg->add("User-Agent", "calaboose.transit");
 		    my $fh = $msg->open;
-		    print $fh "Bonjour,\n\nDemandé depuis l'adresse $remote_ip, un nouveau mot de passe temporaire a été crée :\n\t\t".$random."\n\n";
+		    print $fh "Bonjour,\n\Sollicité depuis la machine $remote, un nouveau mot de passe temporaire a été crée :\n\n\t\t".$random."\n\n";
 		    $fh->close;
 		    
 		    print p("Un message vous a été envoyé à l'instant.");
