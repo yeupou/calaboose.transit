@@ -89,6 +89,8 @@ if ($user) {
 		    print $fh "Bonjour,\n\nDemandé depuis l'adresse $remote_ip, un nouveau mot de passe temporaire a été crée :\n\t\t".$random."\n\n";
 		    $fh->close;
 		    
+		    print p("Un message vous a été envoyé à l'instant.");
+
 		    print "+DBG mail sent " if $debug;
 		    
 		}		
