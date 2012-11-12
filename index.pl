@@ -37,12 +37,12 @@ if ($user) {
 # a user was provided
     print h3("Demande d'authentification :");
     
-    print "+DBG user set to $user\n";
+    print "+DBG user set to $user " if $debug;
 
     # only take into account the request if it relates to a valid user...
     if (scalar(getpwnam($user)) ne "") {
 
-	print "+DBG $user is valid ";
+	print "+DBG $user is valid " if $debug;
 
 	# and is the user belongs to the group transit
 	use User::grent;
@@ -50,7 +50,7 @@ if ($user) {
 	for (@{$group->members}) {
 	    if ($_ eq $user) {
 
-		print "+DBG $user belongs to transit ";
+		print "+DBG $user belongs to transit " if $debug;
 		
 		# then set up a password if there's no .passwd, 
 		#   (concurrent access is not implemented, otherwise it should
@@ -58,7 +58,7 @@ if ($user) {
 		# if need be)
 		unless (-e $passwd) {
 		    
-		    print "+DBG $passwd is missing ";
+		    print "+DBG $passwd is missing " if $debug;
 	    
 		    # If we get here, we create a new password and send it by
 		    # mail to the user.
@@ -77,6 +77,8 @@ if ($user) {
 		    open(PASSWD, "> $passwd");
 		    print PASSWD "$user:".crypt($random, $user)."\n";
 		    close(PASSWD);
+		    
+		    print "+DBG $passwd updated/created ($user:$random) " if $debug;
 			
 		    # build a mail and send it
 		    my $msg = new Mail::Send;
@@ -86,6 +88,8 @@ if ($user) {
 		    my $fh = $msg->open;
 		    print $fh "Bonjour,\n\nDemandé depuis l'adresse $remote_ip, un nouveau mot de passe temporaire a été crée :\n\t\t".$random."\n\n";
 		    $fh->close;
+		    
+		    print "+DBG mail sent " if $debug;
 		    
 		}		
 	    }
