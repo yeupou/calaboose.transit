@@ -65,10 +65,10 @@ if ($user) {
 		    # If we get here, we create a new password and send it by
 		    # mail to the user.
 		    # (assume there is at least a valid alias for the user)
-		    my $random = map { ("a..z","A..Z","0..9")[rand 52] } "0..5";
-		    my $remote_ip = $ENV{'REMOTE_ADDR');
+		    my $random = map { ("a..z","A..Z","0..9")[rand 52] } 0..5;
+		    my $remote_ip = $ENV{'REMOTE_ADDR'};
 
-		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV['HTTP_USER_AGENT'}."\n", localtime;
+		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
 
 						
 
