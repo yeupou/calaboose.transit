@@ -36,7 +36,7 @@ if ($user) {
     print "DBG user $user\n";
 
     # only take into account the request if it relates to a valid user...
-    if (scalar(getpwnam($user)) eq "") {
+    if (scalar(getpwnam($user)) ne "") {
 
 	print "DBG $user is valid\n";
 
