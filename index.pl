@@ -64,7 +64,7 @@ if ($user) {
 		    # (assume there is at least a valid alias for the user)
 
 		    my @chars = (0 .. 9, 'a' .. 'z', 'A' .. 'Z');
-		    my $random =  print join "", @chars[ map rand @chars, 0 .. 6 ];
+		    my $random =  join "", @chars[ map rand @chars, 0 .. 6 ];
 		    my $remote_ip = $ENV{'REMOTE_ADDR'};
 
                     # this must be logged
