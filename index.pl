@@ -26,15 +26,15 @@ print start_html(-lang =>  'fr-FR',
 		 -encoding => 'UTF-8',
 		 -title => "Accès temporaire");
 
-print $ENV{"REMOTE_USER"}." BLALBLA <br>";
+# handle a posted form, if a user was provided
 
-foreach my $key (sort(keys %ENV)) {
-    print "$key = $ENV{$key}<br>\n";
-}
+
+
+# otherwise print a form to allow user to register 
+print start_form(-method=>"POST").textfield(-name=>'url', -default=>'http://').end_form();
+
 
 
 print end_html();
-
-
 
 # EOF
