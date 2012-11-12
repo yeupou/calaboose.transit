@@ -21,6 +21,7 @@
 use strict;
 use CGI qw(:standard Link);
 use POSIX qw(strftime);
+use Mail::Send;
 
 print header();
 print start_html(-lang =>  'fr-FR',
@@ -72,12 +73,20 @@ if ($user) {
 		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
 		    close(LOG);
 		    
+		    # create a passwd file
 		    open(PASSWD, "> $passwd");
 		    print PASSWD "$user:".crypt($random, $user)."\n";
 		    close(PASSWD);
 			
-
-
+		    # build a mail and send it
+		    my $msg = new Mail::Send;
+		    $msg->to($user);
+		    $msg->subject("Accès temporaire");
+		    $msg->add("User-Agent", "calaboose.transit");
+		    my $fh = $msg->open;
+		    print $fh "Bonjour,\n\nDemandé depuis l'adresse $remote_ip, un nouveau mot de passe temporaire a été crée :\n\t\t".$random."\n\n";
+		    $fh->close;
+		    
 		}		
 	    }
 	}
