@@ -43,7 +43,7 @@ Inside your nginx setup, something like:
         # always require a password
 	location ~ /\.passwd { deny  all; }
 	auth_basic "Temporary";
-	auth_basic_user_file /var/www/.passwd;
+	auth_basic_user_file /etc/nginx/passwd/transit;
 
 	# if it failed, go to the specific perl script that mail a password
 	error_page 401 /.transit/;
@@ -69,3 +69,4 @@ name;
 Then you must create a group named transit and add to it users that are entitled
 to use this.
 
+You must also make sure nginx (www-data?) can write to the directory where you store the .passwd file. 

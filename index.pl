@@ -28,6 +28,8 @@ print start_html(-lang =>  'fr-FR',
 		 -title => "Accès temporaire");
 
 my $debug = 1;
+my $log = "/var/log/nginx/transit.log";
+my $passwd = "/etc/nginx/passwd/transit";
 my $user = param('user');
 
 if ($user) {
@@ -53,14 +55,9 @@ if ($user) {
 		#   (concurrent access is not implemented, otherwise it should
 		# at this point read the content of .passwd and update it
 		# if need be)
-		my $passwd = "../.passwd";
 		unless (-e $passwd) {
 		    
 		    print "+DBG $passwd is missing ";
-
-                    # this must be logged
-		    open(LOG, ">> /var/log/nginx/transit.log");
-		    
 	    
 		    # If we get here, we create a new password and send it by
 		    # mail to the user.
@@ -68,11 +65,16 @@ if ($user) {
 		    my $random = map { ("a..z","A..Z","0..9")[rand 52] } 0..5;
 		    my $remote_ip = $ENV{'REMOTE_ADDR'};
 
+                    # this must be logged
+		    open(LOG, ">> /var/log/nginx/transit.log");
 		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
-
-						
-
 		    close(LOG);
+		    
+		    open(PASSWD, "> $passwd");
+		    print PASSWD "$user:$random\n";
+		    close(PASSWD);
+			
+
 
 		}		
 	    }
