@@ -75,7 +75,7 @@ if ($user) {
 
                     # this must be logged
 		    use POSIX qw(strftime);
-		    open(LOG, ">> /var/log/nginx/transit.log");
+		    open(LOG, ">> $log");
 		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
 		    close(LOG);
 		    
