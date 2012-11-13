@@ -1,1 +1,1 @@
-*/10 * * * *	www-data if [ "`find /etc/nginx/passwd/transit -mmin +60 -print0`" ]; then echo > /etc/nginx/passwd/transit && echo "localhost [`date --rfc-2822`] remove all accesses"; fi
+*/10 * * * *	www-data if [ "`find /etc/nginx/passwd/transit -mmin +60 -print0`" ]; then echo > /etc/nginx/passwd/transit && echo "localhost [`date --rfc-2822`] remove all accesses" >> /var/log/nginx/transit.log; fi
