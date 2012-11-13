@@ -50,13 +50,19 @@ if ($user) {
 
 		print "+DBG $user belongs to transit " if $debug;
 		
-		# then set up a password if there's no .passwd, 
-		#   (concurrent access is not implemented, otherwise it should
-		# at this point read the content of .passwd and update it
-		# if need be)
-		unless (-e $passwd) {
+		# then set up a password if there's no entry for the current
+		# user 
+		my $passwd_contains_user = 0;
+		open(PASSWD, "< $passwd");
+		while(<PASSWD>){
+		    next unless /^$user:/;
+		    $passwd_contains_user = 1;
+		}
+		close(PASSWD);
+
+		unless ($passwd_contains_user) {
 		    
-		    print "+DBG $passwd is missing " if $debug;
+		    print "+DBG $user is missing from $passwd " if $debug;
 	    
 		    # If we get here, we create a new password and send it by
 		    # mail to the user.
@@ -72,8 +78,8 @@ if ($user) {
 		    print LOG strftime "$remote_ip [%c] access requested and approved, ".$ENV{'HTTP_USER_AGENT'}."\n", localtime;
 		    close(LOG);
 		    
-		    # create a passwd file
-		    open(PASSWD, "> $passwd");
+		    # update/create a passwd file
+		    open(PASSWD, ">> $passwd");
 		    print PASSWD "$user:".crypt($random, $user)."\n";
 		    close(PASSWD);
 		    
