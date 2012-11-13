@@ -57,6 +57,7 @@ if ($user) {
 		while(<PASSWD>){
 		    next unless /^$user:/;
 		    $passwd_contains_user = 1;
+		    last;
 		}
 		close(PASSWD);
 
