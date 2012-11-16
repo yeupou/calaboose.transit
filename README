@@ -1,27 +1,32 @@
 PURPOSE
 =======
-The point here is to provide a user with valid password, sent by mail, whenever he fails to access a directory with nginx, in order to access it.
+The point here is to provide a user with valid password, sent by mail, 
+whenever he fails to access a directory with nginx, in order to access it.
 
-For instance, the user would like to print some crap residing on his computer from a cybercafé.
+For instance, the user would like to print some crap residing on his 
+computer from a cybercafé.
 
-Yes, packet sniffing may enable some weirdo to be nasty. GPG signing is not an option, as it's unlikely the user got his private key in the cybercafé. I don't think it would be worth it anyway.
+Yes, packet sniffing may enable some weirdo to be nasty. GPG signing is 
+not an option, as it's unlikely the user got his private key in the cybercafé
+. I don't think it would be worth it anyway.
 
-The provided password will be valid for only 60 minutes. Obviously no other mail will be sent during this hour, to avoid to being spam.
-
-It will at first only support one user at a time. If need be, I'll improve it to support multiple concurrent logins.
+The provided password will be valid for only 60 minutes. Obviously no other 
+mail will be sent during this hour, to avoid to being spam.
 
 
 CONTAINS
 ========
 
-- one perl script supposed to run nginx error 401 for the given directory, send mail and will update the relevant .htpasswd accordingly
-- one cronfile to remove .htpasswd when invalidated 
+- one perl script supposed to run nginx error 401 for the given
+   directory, send mail and will update the relevant htpasswd accordingly
+- one cronfile to empty the htpasswd when invalidated 
+- one nginx configuration example (to be edited)
 
 
-THE REAL DEAL
-=============
+INSTALL
+=======
  
-It assumes your nginx supports perl like in
+1) It assumes your nginx supports perl like in
  http://nginxlibrary.com/perl-fastcgi/:
 
 apt-get install nginx libfcgi-perl wget
@@ -32,45 +37,15 @@ chmod +x /etc/init.d/perl-fcgi
 update-rc.d perl-fcgi defaults
 insserv perl-fcgi
 
-Inside your nginx setup, something like:
-
-	# open bar
-	root   /var/www;
-	index index.html;
-	autoindex on;
-	allow all;
-
-        # always require a password
-	location ~ /\.passwd { deny  all; }
-	auth_basic "Temporary";
-	auth_basic_user_file /etc/nginx/passwd/transit;
-
-	# if it failed, go to the specific perl script that mail a password
-	error_page 401 /.transit/;
-	location /.transit/ {
-	         autoindex off;
-                 index index.pl;
-	         auth_basic off;
-        }
-
-	location = /.getaccess/index.pl {
-                 auth_basic off;
-	       	 gzip off;
-	         fastcgi_pass  127.0.0.1:8999;
-	         fastcgi_index index.pl;
-	         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_\
-name;
-                 include fastcgi_params;
-
-        }
+2) Copy and edit the nginx sample and crontab sample into the appropriate places: 
+ - something like /etc/nginx/site-available symlinked to /etc/nginx/site-enabled
+ - /etc/cron.d/transit
 
 
+3) Then you must create a group named transit and add to it users that 
+are entitled to use this.
 
-Then you must create a group named transit and add to it users that are entitled
-to use this.
+4) You must also make sure nginx (www-data?) can write to the directory where
+you store the .passwd file. In the default case here, it's /etc/nginx/passwd/
 
-You must also make sure nginx (www-data?) can write to the directory where you store the .passwd file. In the default case here, it's /etc/nginx/passwd/
-
-Finally, you must copy/link the provided crontab so passwd are only temporary.
- 
 
