@@ -21,9 +21,8 @@
 use strict;
 use CGI qw(:standard Link);
 
-print header();
+print header(-charset => 'UTF-8');
 print start_html(-lang =>  'fr-FR',
-		 -encoding => 'UTF-8',
 		 -title => "Accès temporaire");
 
 my $debug = 0;
